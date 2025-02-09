@@ -6,10 +6,13 @@ import { StoreModule } from '@ngrx/store';
 import * as fromCollectionRequest from './state/collection-request.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { CollectionRequestEffects } from './state/collection-request.effects';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    DashboardComponent
+  ],
   imports: [
     CommonModule,
     RecycleRoutingModule,
