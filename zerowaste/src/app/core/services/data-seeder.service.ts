@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { User } from '../../shared/models/user.model';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +8,13 @@ import { User } from '../../shared/models/user.model';
 export class DataSeederService {
   private seedFlagKey = 'appSeeded';
 
-  constructor() { }
+  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
   seedData(): void {
+    
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
     const seeded = localStorage.getItem(this.seedFlagKey);
     if (!seeded) {
       const users: User[] = [
@@ -122,7 +127,7 @@ export class DataSeederService {
 
       console.log("Seeding users done!");
 
-    }else{
+    } else {
       console.log("Data already seeded. Skipping seeding...");
     }
   }

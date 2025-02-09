@@ -1,7 +1,7 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
+import { CollectionRequest } from '../../../shared/models/collection-request.model';
 
-import { CollectionRequest } from './collection-request.model';
 
 export const CollectionRequestActions = createActionGroup({
   source: 'CollectionRequest/API',
