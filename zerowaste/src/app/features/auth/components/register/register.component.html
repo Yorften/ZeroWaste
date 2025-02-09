@@ -1,1 +1,134 @@
-<p>register works!</p>
+<div class="fixed w-full h-full top-0 left-0 items-center flex flex-col gap-5 justify-center z-50 task-popup-background">
+    <p class="text-5xl font-medium">Register an Account</p>
+    <div class="bg-white w-11/12 md:w-7/12 h-fit shadow-xl flex flex-col items-center overflow-hidden rounded-md md:h-fit register-form-container">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()"
+            class="flex flex-col items-center justify-between gap-5 px-[5%] w-[96%] sm:w-[98%] md:w-[97%] lg:w-[98.5%] mx-auto overflow-x-hidden overflow-y-auto mt-2 py-10">
+            <div class="flex flex-col items-center gap-4 w-full">
+                <!-- First Name Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">First Name</p>
+                        <input id="name" type="text" formControlName="name" [class.is-invalid]="isFieldInvalid('name')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Enter your first name" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('name')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('name')?.errors?.['required']">First Name is required</span>
+                        <span *ngIf="registerForm.get('name')?.errors?.['minlength']">First Name must be at least 2 characters</span>
+                        <span *ngIf="registerForm.get('name')?.errors?.['maxlength']">First Name must be no more than 32 characters</span>
+                    </div>
+                </div>
+                <!-- Last Name Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">Last Name</p>
+                        <input id="last_name" type="text" formControlName="last_name" [class.is-invalid]="isFieldInvalid('last_name')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Enter your last name" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('last_name')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('last_name')?.errors?.['required']">Last Name is required</span>
+                        <span *ngIf="registerForm.get('last_name')?.errors?.['minlength']">Last Name must be at least 2 characters</span>
+                        <span *ngIf="registerForm.get('last_name')?.errors?.['maxlength']">Last Name must be no more than 32 characters</span>
+                    </div>
+                </div>
+                <!-- Email Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">Email</p>
+                        <input id="email" type="email" formControlName="email" [class.is-invalid]="isFieldInvalid('email')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Enter your email" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('email')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+                        <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email address</span>
+                        <span *ngIf="registerForm.get('email')?.errors?.['minlength']">Email must be at least 8 characters</span>
+                        <span *ngIf="registerForm.get('email')?.errors?.['maxlength']">Email must be no more than 32 characters</span>
+                    </div>
+                </div>
+                <!-- Password Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">Password</p>
+                        <input id="password" type="password" formControlName="password" [class.is-invalid]="isFieldInvalid('password')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Enter your password" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('password')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+                        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters</span>
+                        <span *ngIf="registerForm.get('password')?.errors?.['maxlength']">Password must be no more than 32 characters</span>
+                    </div>
+                </div>
+                <!-- Repeat Password Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">Repeat Password</p>
+                        <input id="repeatPassword" type="password" formControlName="repeatPassword" [class.is-invalid]="isFieldInvalid('repeatPassword')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Repeat your password" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('repeatPassword') || registerForm.errors?.['passwordsMismatch']" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('repeatPassword')?.errors?.['required']">Repeat Password is required</span>
+                        <span *ngIf="registerForm.errors?.['passwordsMismatch']">Passwords do not match</span>
+                    </div>
+                </div>
+                <!-- Address Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">Address</p>
+                        <input id="address" type="text" formControlName="address" [class.is-invalid]="isFieldInvalid('address')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Enter your address" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('address')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('address')?.errors?.['required']">Address is required</span>
+                        <span *ngIf="registerForm.get('address')?.errors?.['minlength']">Address must be at least 8 characters</span>
+                        <span *ngIf="registerForm.get('address')?.errors?.['maxlength']">Address must be no more than 64 characters</span>
+                    </div>
+                </div>
+                <!-- Phone Number Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">Phone Number</p>
+                        <input id="phone_number" type="text" formControlName="phone_number" [class.is-invalid]="isFieldInvalid('phone_number')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Enter your phone number" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('phone_number')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('phone_number')?.errors?.['required']">Phone number is required</span>
+                        <span *ngIf="registerForm.get('phone_number')?.errors?.['pattern']">Phone number must be numeric and between 8 and 15 digits</span>
+                    </div>
+                </div>
+                <!-- Birth Date Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col border-2 border-[#A1A1A1] p-2 rounded-md">
+                        <p class="text-xs">Birth Date</p>
+                        <input id="birth_date" type="date" formControlName="birth_date" [class.is-invalid]="isFieldInvalid('birth_date')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none" placeholder="Select your birth date" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('birth_date')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="registerForm.get('birth_date')?.errors?.['required']">Birth date is required</span>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center text-sm text-gray-600 self-end">
+                Already have an account?
+                <a routerLink="/auth/login" class="underline hover:text-blue-800">Login here</a>
+            </p>
+
+            <div *ngIf="(status$ | async) === 'success'" class="p-4 bg-green-400/80 w-full">
+                <p class="text-white">Register success!</p>
+            </div>
+            <div *ngIf="(status$ | async) !== 'success' && (status$ | async) !== null" class="p-4 bg-red-600/80 w-full">
+                <p class="text-white"> {{status$ | async}} </p>
+            </div>
+            <button *ngIf="loading$ | async" type="button"
+                class="flex cursor-not-allowed items-center justify-center shadow-sm rounded-md bg-black py-3 px-2 leading-6 font-semibold text-white transition duration-150 ease-in-out w-full"
+                disabled="">
+                <svg class="mr-3 -ml-1 size-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>Processing…</button>
+            <button *ngIf="!(loading$ | async)" type="submit"
+                class="w-full cursor-pointer rounded-md shadow-sm text-white font-medium bg-black py-3 px-2 transition-all duration-200 hover:bg-gray-950 hover:shadow-md">
+                Register
+            </button>
+        </form>
+    </div>
+</div>

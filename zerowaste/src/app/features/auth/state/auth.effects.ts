@@ -16,7 +16,12 @@ export class AuthEffects {
       mergeMap(({ username, password }) =>
         this.authService.login(username, password).pipe(
           delay(2000),
-          map(user => AuthActions.loginSuccess({ user, status: 'success' })),
+          map(user => {
+            if (typeof localStorage !== 'undefined') {
+              localStorage.setItem('user', JSON.stringify(user));
+            }
+            return AuthActions.loginSuccess({ user, status: 'success' })
+          }),
           catchError((error) => of(AuthActions.loginFailure({ status: error })))
         )
       )
@@ -28,6 +33,7 @@ export class AuthEffects {
       ofType(AuthActions.register),
       mergeMap(action =>
         this.userService.register(action.user).pipe(
+          delay(2000),
           map(() => AuthActions.registerSuccess({ status: 'success' })),
           catchError((error) => of(AuthActions.registerFailure({ status: error })))
         )

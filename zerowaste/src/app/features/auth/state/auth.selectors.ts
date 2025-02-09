@@ -14,3 +14,8 @@ export const selectStatus = createSelector(
   selectAuthState,
   (state: fromAuth.State) => state.status
 );
+
+export const selectLoading = createSelector(
+  selectAuthState,
+  (state: fromAuth.State) => state.loading
+);

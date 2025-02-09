@@ -3,6 +3,8 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { DataSeederService } from './core/services/data-seeder.service';
 
 export function initializeApp(dataSeederService: DataSeederService) {
@@ -17,7 +19,9 @@ export function initializeApp(dataSeederService: DataSeederService) {
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([]),
+    AppRoutingModule,
   ],
   providers: [
     provideClientHydration(),

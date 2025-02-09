@@ -1,7 +1,7 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { User } from '../../../shared/models/user.model';
 
-type status = 'success' | string | null;
+export type status = 'success' | string | null;
 
 export const AuthActions = createActionGroup({
   source: 'Auth',

@@ -19,8 +19,8 @@ export class DataSeederService {
     if (!seeded) {
       const users: User[] = [
         {
-          email: 'individual@example.com',
-          password: 'password123',
+          email: 'indiv@youcode.ma',
+          password: 'password',
           name: 'John',
           last_name: 'Doe',
           address: '123 Main St, Cityville',
@@ -29,8 +29,8 @@ export class DataSeederService {
           role: 'INDIVIDUAL'
         },
         {
-          email: 'collector@example.com',
-          password: 'password123',
+          email: 'coll@youcode.ma',
+          password: 'password',
           name: 'Jane',
           last_name: 'Smith',
           address: '456 Market St, Townsville',
@@ -39,8 +39,8 @@ export class DataSeederService {
           role: 'COLLECTOR'
         },
         {
-          email: 'indiv1@example.com',
-          password: 'password123',
+          email: 'indiv1@youcode.ma',
+          password: 'password',
           name: 'Alice',
           last_name: 'Johnson',
           address: '789 Elm St, Villagetown',
@@ -49,8 +49,8 @@ export class DataSeederService {
           role: 'INDIVIDUAL'
         },
         {
-          email: 'coll1@example.com',
-          password: 'password123',
+          email: 'coll1@youcode.ma',
+          password: 'password',
           name: 'Robert',
           last_name: 'Brown',
           address: '147 Pine St, Metrocity',
@@ -59,8 +59,8 @@ export class DataSeederService {
           role: 'COLLECTOR'
         },
         {
-          email: 'indiv2@example.com',
-          password: 'password123',
+          email: 'indiv2@youcode.ma',
+          password: 'password',
           name: 'Sophia',
           last_name: 'Davis',
           address: '963 Oak Ave, Lakeside',
@@ -69,8 +69,8 @@ export class DataSeederService {
           role: 'INDIVIDUAL'
         },
         {
-          email: 'coll2@example.com',
-          password: 'password123',
+          email: 'coll2@youcode.ma',
+          password: 'password',
           name: 'Michael',
           last_name: 'Wilson',
           address: '852 Cedar St, Downtown',
@@ -79,8 +79,8 @@ export class DataSeederService {
           role: 'COLLECTOR'
         },
         {
-          email: 'indiv3@example.com',
-          password: 'password123',
+          email: 'indiv3@youcode.ma',
+          password: 'password',
           name: 'Emily',
           last_name: 'White',
           address: '741 Maple St, Riverside',
@@ -89,8 +89,8 @@ export class DataSeederService {
           role: 'INDIVIDUAL'
         },
         {
-          email: 'coll3@example.com',
-          password: 'password123',
+          email: 'coll3@youcode.ma',
+          password: 'password',
           name: 'David',
           last_name: 'Martinez',
           address: '369 Birch St, Uptown',
@@ -99,8 +99,8 @@ export class DataSeederService {
           role: 'COLLECTOR'
         },
         {
-          email: 'indiv4@example.com',
-          password: 'password123',
+          email: 'indiv4@youcode.ma',
+          password: 'password',
           name: 'Oliver',
           last_name: 'Anderson',
           address: '258 Chestnut St, Suburbia',
@@ -109,8 +109,8 @@ export class DataSeederService {
           role: 'INDIVIDUAL'
         },
         {
-          email: 'coll4@example.com',
-          password: 'password123',
+          email: 'coll4@youcode.ma',
+          password: 'password',
           name: 'Lucas',
           last_name: 'Taylor',
           address: '123 Walnut St, Capital City',
