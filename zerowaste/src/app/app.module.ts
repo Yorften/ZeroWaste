@@ -6,6 +6,10 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DataSeederService } from './core/services/data-seeder.service';
+import * as fromAuth from './features/auth/state/auth.reducer';
+
+import { SharedModule } from './shared/shared.module';
+import { AuthEffects } from './features/auth/state/auth.effects';
 
 export function initializeApp(dataSeederService: DataSeederService) {
   return (): void => {
@@ -15,12 +19,15 @@ export function initializeApp(dataSeederService: DataSeederService) {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
+    SharedModule,
     BrowserModule,
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([]),
+    StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducer),
+    EffectsModule.forFeature([AuthEffects]),
     AppRoutingModule,
   ],
   providers: [
