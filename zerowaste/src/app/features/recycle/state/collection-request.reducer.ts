@@ -1,4 +1,4 @@
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { CollectionRequestActions } from './collection-request.actions';
 import { CollectionRequest } from '../../../shared/models/collection-request.model';
@@ -102,8 +102,21 @@ export const collectionRequestsFeature = createFeature({
   name: collectionRequestsFeatureKey,
   reducer,
   extraSelectors: ({ selectCollectionRequestsState }) => ({
-    ...adapter.getSelectors(selectCollectionRequestsState)
+    ...adapter.getSelectors(selectCollectionRequestsState),
+    selectResolverLoadingState: createSelector(
+      selectCollectionRequestsState,
+      (state: State) => state.resolverLoadingState
+    ),
+    selectRequestLoadingState: createSelector(
+      selectCollectionRequestsState,
+      (state: State) => state.requestLoadingState
+    ),
+    selectStatusState: createSelector(
+      selectCollectionRequestsState,
+      (state: State) => state.status
+    ),
   }),
+
 });
 
 export const {
@@ -111,4 +124,8 @@ export const {
   selectEntities,
   selectAll,
   selectTotal,
+  selectResolverLoadingState,
+  selectRequestLoadingState,
+  selectStatusState,
+
 } = collectionRequestsFeature;

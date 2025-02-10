@@ -6,6 +6,9 @@ import { Update } from '@ngrx/entity';
 export const UserActions = createActionGroup({
   source: 'User',
   events: {
+    'Load User': emptyProps(),
+    'Load User Success': emptyProps(),
+
     'Reward Points': props<{ points: number; userId: string }>(),
     'Reward Points Success': props<{ points: number; userId: string }>(),
     'Reward Points Failure': props<{ error: string }>(),

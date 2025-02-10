@@ -5,17 +5,17 @@ export const selectAuthState = createFeatureSelector<fromAuth.State>(
   fromAuth.authFeatureKey
 );
 
-export const selectUser = createSelector(
+export const selectUserState = createSelector(
   selectAuthState,
   (state: fromAuth.State) => state.user
 );
 
-export const selectStatus = createSelector(
+export const selectStatusState = createSelector(
   selectAuthState,
   (state: fromAuth.State) => state.status
 );
 
-export const selectLoading = createSelector(
+export const selectLoadingState = createSelector(
   selectAuthState,
   (state: fromAuth.State) => state.loading
 );

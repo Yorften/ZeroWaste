@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from './shared/models/user.model';
 import { Store } from '@ngrx/store';
-import { selectUser } from './features/auth/state/auth.selectors';
+import { selectUserState } from './features/auth/state/auth.selectors';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ import { selectUser } from './features/auth/state/auth.selectors';
 export class AppComponent {
   
   title = 'zerowaste';
-  user$: Observable<User | null> = this.store.select(selectUser);
+  user$: Observable<User | null> = this.store.select(selectUserState);
 
   constructor(private store: Store){}
 }

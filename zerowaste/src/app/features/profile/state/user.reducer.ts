@@ -5,11 +5,13 @@ import { status } from '../../auth/state/auth.actions';
 export const userFeatureKey = 'user';
 
 export interface State {
+  resolverLoadingState: boolean;
   loading: boolean;
   status: status
 }
 
 export const initialState: State = {
+  resolverLoadingState: false,
   loading: false,
   status: null
 };

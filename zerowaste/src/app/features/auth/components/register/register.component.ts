@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { AuthActions, status } from '../../state/auth.actions';
 import { User } from '../../../../shared/models/user.model';
 import { Observable } from 'rxjs';
-import { selectLoading, selectStatus } from '../../state/auth.selectors';
+import { selectLoadingState, selectStatusState } from '../../state/auth.selectors';
 
 @Component({
   selector: 'app-register',
@@ -12,8 +12,8 @@ import { selectLoading, selectStatus } from '../../state/auth.selectors';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  status$: Observable<status> = this.store.select(selectStatus);
-  loading$: Observable<boolean> = this.store.select(selectLoading);
+  status$: Observable<status> = this.store.select(selectStatusState);
+  loading$: Observable<boolean> = this.store.select(selectLoadingState);
 
   constructor(
     private fb: FormBuilder,

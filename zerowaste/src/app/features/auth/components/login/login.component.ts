@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AuthActions, status } from '../../state/auth.actions';
 import { Observable, Subscription } from 'rxjs';
-import { selectLoading, selectStatus, selectUser } from '../../state/auth.selectors';
+import { selectLoadingState, selectStatusState, selectUserState } from '../../state/auth.selectors';
 import { User } from '../../../../shared/models/user.model';
 import { Router } from '@angular/router';
 
@@ -14,8 +14,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  status$: Observable<status> = this.store.select(selectStatus);
-  loading$: Observable<boolean> = this.store.select(selectLoading);
+  status$: Observable<status> = this.store.select(selectStatusState);
+  loading$: Observable<boolean> = this.store.select(selectLoadingState);
   private userSubscription: Subscription = new Subscription();;
 
   constructor(
@@ -30,7 +30,7 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
-    this.userSubscription = this.store.select(selectUser).subscribe((user: User | null) => {
+    this.userSubscription = this.store.select(selectUserState).subscribe((user: User | null) => {
       if (user) {
         this.router.navigate(['/dashboard']);
       }
