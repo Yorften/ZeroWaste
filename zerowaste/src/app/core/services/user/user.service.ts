@@ -51,14 +51,23 @@ export class UserService {
     return of(this.getUsersFromStorage());
   }
 
-  // READ: Get a single user by email
-  getUser(email: string): Observable<User | null> {
+  getUserByEmail(email: string): Observable<User | null> {
     if (!isPlatformBrowser(this.platformId)) {
       return throwError(() => new Error('Not running in a browser environment'));
     }
 
     const users = this.getUsersFromStorage();
     const foundUser = users.find(u => u.email === email);
+    return of(foundUser ? foundUser : null);
+  }
+
+  getUserById(id: string): Observable<User | null> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(() => new Error('Not running in a browser environment'));
+    }
+
+    const users = this.getUsersFromStorage();
+    const foundUser = users.find(u => u.id === id);
     return of(foundUser ? foundUser : null);
   }
 

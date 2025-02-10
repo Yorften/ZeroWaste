@@ -7,9 +7,11 @@ export enum RequestStatus {
 }
 
 export interface CollectionRequest {
+    id: string,
     type: MaterialType,
     estimated_weight: number,
     collect_address: string,
     collect_date: Date,
     status: RequestStatus,
+    user_id: string,
 }

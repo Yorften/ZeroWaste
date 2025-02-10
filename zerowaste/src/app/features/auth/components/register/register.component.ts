@@ -43,6 +43,7 @@ export class RegisterComponent {
     const { name, last_name, email, password, address, phone_number, birth_date } = this.registerForm.value;
 
     const newUser: User = {
+      id: `user-${Date.now()}-${Math.random().toString(36)}`,
       email,
       password,
       name,
@@ -50,7 +51,8 @@ export class RegisterComponent {
       address,
       phone_number,
       birth_date: new Date(birth_date),
-      role: 'INDIVIDUAL'
+      role: 'INDIVIDUAL',
+      points: 0
     };
 
     this.store.dispatch(AuthActions.register({ user: newUser }));

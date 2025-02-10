@@ -19,6 +19,7 @@ export class DataSeederService {
     if (!seeded) {
       const users: User[] = [
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'indiv@youcode.ma',
           password: 'password',
           name: 'John',
@@ -26,9 +27,11 @@ export class DataSeederService {
           address: '123 Main St, Cityville',
           phone_number: '1234567890',
           birth_date: new Date('1990-01-01'),
-          role: 'INDIVIDUAL'
+          role: 'INDIVIDUAL',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'coll@youcode.ma',
           password: 'password',
           name: 'Jane',
@@ -36,9 +39,11 @@ export class DataSeederService {
           address: '456 Market St, Townsville',
           phone_number: '0987654321',
           birth_date: new Date('1985-05-15'),
-          role: 'COLLECTOR'
+          role: 'COLLECTOR',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'indiv1@youcode.ma',
           password: 'password',
           name: 'Alice',
@@ -46,9 +51,11 @@ export class DataSeederService {
           address: '789 Elm St, Villagetown',
           phone_number: '1112223333',
           birth_date: new Date('1992-07-10'),
-          role: 'INDIVIDUAL'
+          role: 'INDIVIDUAL',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'coll1@youcode.ma',
           password: 'password',
           name: 'Robert',
@@ -56,9 +63,11 @@ export class DataSeederService {
           address: '147 Pine St, Metrocity',
           phone_number: '4445556666',
           birth_date: new Date('1983-03-25'),
-          role: 'COLLECTOR'
+          role: 'COLLECTOR',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'indiv2@youcode.ma',
           password: 'password',
           name: 'Sophia',
@@ -66,9 +75,11 @@ export class DataSeederService {
           address: '963 Oak Ave, Lakeside',
           phone_number: '7778889999',
           birth_date: new Date('1995-09-30'),
-          role: 'INDIVIDUAL'
+          role: 'INDIVIDUAL',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'coll2@youcode.ma',
           password: 'password',
           name: 'Michael',
@@ -76,9 +87,11 @@ export class DataSeederService {
           address: '852 Cedar St, Downtown',
           phone_number: '5554443333',
           birth_date: new Date('1987-11-12'),
-          role: 'COLLECTOR'
+          role: 'COLLECTOR',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'indiv3@youcode.ma',
           password: 'password',
           name: 'Emily',
@@ -86,9 +99,11 @@ export class DataSeederService {
           address: '741 Maple St, Riverside',
           phone_number: '6667778888',
           birth_date: new Date('1998-04-22'),
-          role: 'INDIVIDUAL'
+          role: 'INDIVIDUAL',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'coll3@youcode.ma',
           password: 'password',
           name: 'David',
@@ -96,9 +111,11 @@ export class DataSeederService {
           address: '369 Birch St, Uptown',
           phone_number: '2223334444',
           birth_date: new Date('1989-06-18'),
-          role: 'COLLECTOR'
+          role: 'COLLECTOR',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'indiv4@youcode.ma',
           password: 'password',
           name: 'Oliver',
@@ -106,9 +123,11 @@ export class DataSeederService {
           address: '258 Chestnut St, Suburbia',
           phone_number: '9990001111',
           birth_date: new Date('1993-12-05'),
-          role: 'INDIVIDUAL'
+          role: 'INDIVIDUAL',
+          points: 0
         },
         {
+          id: `user-${Date.now()}-${Math.random().toString(36)}`,
           email: 'coll4@youcode.ma',
           password: 'password',
           name: 'Lucas',
@@ -116,9 +135,11 @@ export class DataSeederService {
           address: '123 Walnut St, Capital City',
           phone_number: '3332221111',
           birth_date: new Date('1984-08-27'),
-          role: 'COLLECTOR'
+          role: 'COLLECTOR',
+          points: 0
         }
       ];
+      
       console.log("Seeding users...");
 
       localStorage.setItem('users', JSON.stringify(users));

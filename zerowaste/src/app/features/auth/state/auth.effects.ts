@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, delay } from 'rxjs/operators';
+import { catchError, map, mergeMap, delay, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthActions } from './auth.actions';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
+import { UserActions } from '../../profile/state/user.actions';
+import { User } from '../../../shared/models/user.model';
 
 
 @Injectable()
@@ -27,6 +29,30 @@ export class AuthEffects {
       )
     )
   );
+
+
+  updateAuthentificatedUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.updateUserSuccess),
+      delay(2000),
+      tap(action => {
+        if (typeof localStorage !== 'undefined') {
+          const storedUser = localStorage.getItem('user');
+          if (storedUser) {
+            const currentUser: User = JSON.parse(storedUser);
+            const update = action.user;
+            if (currentUser.id === update.id) {
+              const updatedUser: User = { ...currentUser, ...update.changes };
+              localStorage.setItem('user', JSON.stringify(updatedUser));
+            }
+          }
+        }
+      })
+    ),
+    { dispatch: false }
+  );
+
+
 
   register$ = createEffect(() =>
     this.actions$.pipe(

@@ -7,9 +7,11 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DataSeederService } from './core/services/data-seeder.service';
 import * as fromAuth from './features/auth/state/auth.reducer';
+import * as fromUser from './features/profile/state/user.reducer';
 
 import { SharedModule } from './shared/shared.module';
 import { AuthEffects } from './features/auth/state/auth.effects';
+import { UserEffects } from './features/profile/state/user.effects';
 
 export function initializeApp(dataSeederService: DataSeederService) {
   return (): void => {
@@ -28,6 +30,8 @@ export function initializeApp(dataSeederService: DataSeederService) {
     EffectsModule.forRoot([]),
     StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducer),
     EffectsModule.forFeature([AuthEffects]),
+    StoreModule.forFeature(fromUser.userFeatureKey, fromUser.reducer),
+    EffectsModule.forFeature([UserEffects]),
     AppRoutingModule,
   ],
   providers: [

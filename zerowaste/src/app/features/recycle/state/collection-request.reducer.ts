@@ -6,47 +6,96 @@ import { CollectionRequest } from '../../../shared/models/collection-request.mod
 export const collectionRequestsFeatureKey = 'collectionRequests';
 
 export interface State extends EntityState<CollectionRequest> {
-  // additional entities state properties
+  resolverLoadingState: boolean;
+  requestLoadingState: boolean;
+  status: 'success' | string | null;
 }
 
 export const adapter: EntityAdapter<CollectionRequest> = createEntityAdapter<CollectionRequest>();
 
 export const initialState: State = adapter.getInitialState({
-  // additional entity state properties
+  resolverLoadingState: false,
+  requestLoadingState: false,
+  status: null,
 });
 
 export const reducer = createReducer(
   initialState,
-  on(CollectionRequestActions.addCollectionRequest,
-    (state, action) => adapter.addOne(action.collectionRequest, state)
+
+  on(CollectionRequestActions.loadCollectionRequests, (state) => ({
+    ...state,
+    resolverLoadingState: true,
+    status: null,
+  })),
+  on(CollectionRequestActions.loadCollectionRequestsSuccess, (state, { collectionRequests }) =>
+    adapter.setAll(collectionRequests, {
+      ...state,
+      resolverLoadingState: false,
+    })
   ),
-  on(CollectionRequestActions.upsertCollectionRequest,
-    (state, action) => adapter.upsertOne(action.collectionRequest, state)
+  on(CollectionRequestActions.loadCollectionRequestsFailure, (state, { status }) => ({
+    ...state,
+    resolverLoadingState: false,
+    status,
+  })),
+
+
+  on(CollectionRequestActions.addCollectionRequest, (state) => ({
+    ...state,
+    requestLoadingState: true,
+    status: null,
+  })),
+  on(CollectionRequestActions.addCollectionRequestSuccess, (state, { collectionRequest }) =>
+    adapter.addOne(collectionRequest, {
+      ...state,
+      requestLoadingState: false,
+      status: 'success',
+    })
   ),
-  on(CollectionRequestActions.addCollectionRequests,
-    (state, action) => adapter.addMany(action.collectionRequests, state)
+  on(CollectionRequestActions.addCollectionRequestFailure, (state, { error }) => ({
+    ...state,
+    requestLoadingState: false,
+    status: error,
+  })),
+
+
+  on(CollectionRequestActions.updateCollectionRequest, (state) => ({
+    ...state,
+    requestLoadingState: true,
+    status: null,
+  })),
+  on(CollectionRequestActions.updateCollectionRequestSuccess, (state, { collectionRequest }) =>
+    adapter.updateOne(collectionRequest, {
+      ...state,
+      requestLoadingState: false,
+      status: 'success',
+    })
   ),
-  on(CollectionRequestActions.upsertCollectionRequests,
-    (state, action) => adapter.upsertMany(action.collectionRequests, state)
+  on(CollectionRequestActions.updateCollectionRequestFailure, (state, { error }) => ({
+    ...state,
+    requestLoadingState: false,
+    status: error,
+  })),
+
+
+  on(CollectionRequestActions.deleteCollectionRequest, (state) => ({
+    ...state,
+    requestLoadingState: true,
+    status: null,
+  })),
+  on(CollectionRequestActions.deleteCollectionRequestSuccess, (state, { id }) =>
+    adapter.removeOne(id, {
+      ...state,
+      requestLoadingState: false,
+      status: 'success',
+    })
   ),
-  on(CollectionRequestActions.updateCollectionRequest,
-    (state, action) => adapter.updateOne(action.collectionRequest, state)
-  ),
-  on(CollectionRequestActions.updateCollectionRequests,
-    (state, action) => adapter.updateMany(action.collectionRequests, state)
-  ),
-  on(CollectionRequestActions.deleteCollectionRequest,
-    (state, action) => adapter.removeOne(action.id, state)
-  ),
-  on(CollectionRequestActions.deleteCollectionRequests,
-    (state, action) => adapter.removeMany(action.ids, state)
-  ),
-  on(CollectionRequestActions.loadCollectionRequests,
-    (state, action) => adapter.setAll(action.collectionRequests, state)
-  ),
-  on(CollectionRequestActions.clearCollectionRequests,
-    state => adapter.removeAll(state)
-  ),
+  on(CollectionRequestActions.deleteCollectionRequestFailure, (state, { error }) => ({
+    ...state,
+    requestLoadingState: false,
+    status: error,
+  }))
+
 );
 
 export const collectionRequestsFeature = createFeature({
