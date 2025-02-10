@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, delay, map, mergeMap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserActions } from './user.actions';
 import { UserService } from '../../../core/services/user/user.service';
@@ -23,6 +23,7 @@ export class UserEffects {
             }
             const updatedUser: User = { ...existingUser, ...action.user.changes };
             return this.userService.updateUser(updatedUser).pipe(
+              delay(2000),
               map(user =>
                 UserActions.updateUserSuccess({
                   user: { id: user.id, changes: user }

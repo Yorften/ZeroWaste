@@ -19,6 +19,17 @@ export const initialState: State = {
 export const reducer = createReducer(
   initialState,
 
+  on(UserActions.loadUser, (state) => ({
+    ...state,
+    resolverLoadingState: true,
+    status: null,
+  })),
+  on(UserActions.loadUserSuccess, (state) => ({
+    ...state,
+    resolverLoadingState: false,
+    status: null,
+  })),
+
   on(UserActions.rewardPoints, (state, { points, userId }) => ({
     ...state,
     loading: true,
@@ -36,12 +47,12 @@ export const reducer = createReducer(
   })),
 
 
-  on(UserActions.updateUser, (state, { user }) => ({
+  on(UserActions.updateUser, (state) => ({
     ...state,
     loading: true,
     status: null,
   })),
-  on(UserActions.updateUserSuccess, (state, { user }) => ({
+  on(UserActions.updateUserSuccess, (state) => ({
     ...state,
     loading: false,
     status: 'success',

@@ -79,6 +79,11 @@ export const reducer = createReducer(
     ...state,
     loading: false,
     status: status
+  })),
+
+  on(AuthActions.refreshUser, (state, { user }) => ({
+    ...state,
+    user: user,
   }))
 );
 

@@ -8,10 +8,12 @@ import { EffectsModule } from '@ngrx/effects';
 import { DataSeederService } from './core/services/data-seeder.service';
 import * as fromAuth from './features/auth/state/auth.reducer';
 import * as fromUser from './features/profile/state/user.reducer';
+import * as fromfromCollectionRequest from './features/recycle/state/collection-request.reducer';
 
 import { SharedModule } from './shared/shared.module';
 import { AuthEffects } from './features/auth/state/auth.effects';
 import { UserEffects } from './features/profile/state/user.effects';
+import { CollectionRequestEffects } from './features/recycle/state/collection-request.effects';
 
 export function initializeApp(dataSeederService: DataSeederService) {
   return (): void => {
@@ -32,6 +34,8 @@ export function initializeApp(dataSeederService: DataSeederService) {
     EffectsModule.forFeature([AuthEffects]),
     StoreModule.forFeature(fromUser.userFeatureKey, fromUser.reducer),
     EffectsModule.forFeature([UserEffects]),
+    StoreModule.forFeature(fromfromCollectionRequest.collectionRequestsFeatureKey, fromfromCollectionRequest.reducer),
+    EffectsModule.forFeature([CollectionRequestEffects]),
     AppRoutingModule,
   ],
   providers: [

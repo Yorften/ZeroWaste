@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { UserActions } from '../../profile/state/user.actions';
 import { User } from '../../../shared/models/user.model';
+import { NotificationService } from '../../../core/services/notification/notification.service';
 
 
 @Injectable()
@@ -34,24 +35,29 @@ export class AuthEffects {
   updateAuthentificatedUser$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UserActions.updateUserSuccess),
-      delay(2000),
-      tap(action => {
+      mergeMap(action => {
         if (typeof localStorage !== 'undefined') {
           const storedUser = localStorage.getItem('user');
           if (storedUser) {
             const currentUser: User = JSON.parse(storedUser);
-            const update = action.user;
+            const update = action.user; // Update<User>
             if (currentUser.id === update.id) {
               const updatedUser: User = { ...currentUser, ...update.changes };
               localStorage.setItem('user', JSON.stringify(updatedUser));
+              
+              this.notificationService.emitNotification(
+                'Profile updated successfully!',
+                'success'
+              );
+
+              return of(AuthActions.refreshUser({ user: updatedUser }));
             }
           }
         }
-      })
-    ),
-    { dispatch: false }
+        return of({ type: '[User] No Action' });
+      }),
+    )
   );
-
 
 
   register$ = createEffect(() =>
@@ -80,5 +86,5 @@ export class AuthEffects {
   );
 
 
-  constructor(private actions$: Actions, private authService: AuthService, private userService: UserService) { }
+  constructor(private actions$: Actions, private authService: AuthService, private userService: UserService, private notificationService: NotificationService) { }
 }

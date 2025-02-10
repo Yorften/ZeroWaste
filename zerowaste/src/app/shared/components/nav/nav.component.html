@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between h-full shadow-lg px-10 py-4 w-full">
     <p class="text-lg font-medium"><span class="text-green-500">Zero</span>Waste</p>
-    <div class="min-h-screen flex flex-col justify-center">
+    <div class="min-h-screen flex flex-col justify-center z-50">
         <div class="flex items-center justify-center">
             <div class=" relative inline-block text-left dropdown">
                 <span class="rounded-md shadow-sm"><button
@@ -20,14 +20,23 @@
                             <p class="text-sm leading-5">Signed in as</p>
                             <p class="text-sm font-medium leading-5 text-gray-900 truncate">{{(user$ | async)?.email}}</p>
                         </div>
-                        <div class="py-1">
-                            <a routerLink="/profile" tabindex="0" class="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left z-10"
-                                role="menuitem">Account
-                                settings</a>
+                        <div class="py-1 hover:bg-gray-100">
+                            <a routerLink="/dashboard" tabindex="0"
+                                class="text-gray-700 flex cursor-pointer justify-between w-full px-4 py-2 text-sm leading-5 text-left z-10"
+                                role="menuitem">Dashboard
+                            </a>
                         </div>
-                        <div class="py-1">
-                            <div (click)="logout()" tabindex="3" class="text-gray-700 flex cursor-pointer justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-                                role="menuitem">Sign out</div>
+                        <div class="py-1 hover:bg-gray-100">
+                            <a routerLink="/profile" tabindex="0"
+                                class="text-gray-700 flex cursor-pointer justify-between w-full px-4 py-2 text-sm leading-5 text-left z-10"
+                                role="menuitem">Account
+                                settings
+                            </a>
+                        </div>
+                        <div class="py-1 hover:bg-gray-100">
+                            <div (click)="logout()" tabindex="3"
+                                class="text-gray-700 flex cursor-pointer justify-between w-full px-4 py-2 text-sm leading-5 text-left" role="menuitem">Sign
+                                out</div>
                         </div>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ import { StoreModule } from '@ngrx/store';
 import * as fromUser from './state/user.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './state/user.effects';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { UserEffects } from './state/user.effects';
     UserProfileComponent
   ],
   imports: [
+    ReactiveFormsModule,
     CommonModule,
     ProfileRoutingModule,
     StoreModule.forFeature(fromUser.userFeatureKey, fromUser.reducer),
