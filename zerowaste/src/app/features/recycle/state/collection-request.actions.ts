@@ -8,7 +8,7 @@ import { User } from '../../../shared/models/user.model';
 export const CollectionRequestActions = createActionGroup({
   source: 'CollectionRequest/API',
   events: {
-    'Load CollectionRequests': props<{ user: User }>(),
+    'Load CollectionRequests': props<{ userId?: string }>(),
     'Load CollectionRequests Success': props<{ collectionRequests: CollectionRequest[] }>(),
     'Load CollectionRequests Failure': props<{ status: status }>(),
 
@@ -23,5 +23,8 @@ export const CollectionRequestActions = createActionGroup({
     'Delete Collection Request': props<{ id: string }>(),
     'Delete Collection Request Success': props<{ id: string }>(),
     'Delete Collection Request Failure': props<{ error: status }>(),
+
+    'Edit Collection Request': props<{ collectionRequest: CollectionRequest }>(),
+    'Clear Edited Collection Request': emptyProps(),
   }
 });

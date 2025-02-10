@@ -1,0 +1,119 @@
+<div class="fixed w-full h-full top-0 left-0 items-center flex justify-center z-50 popup-background">
+    <div class="bg-white w-11/12 md:w-7/12 h-fit shadow-xl flex flex-col items-center overflow-hidden rounded-md md:h-fit popup-form-container">
+        <div class="w-full h-6">
+            <div class="flex justify-end h-full rounded-tr-md rounded-tl-md">
+                <p (click)="closeForm()" class="text-xl text-gray-700 font-bold cursor-pointer text-center mr-1">&times;</p>
+            </div>
+        </div>
+        <form [formGroup]="collectionRequestForm" (ngSubmit)="onSubmit()"
+            class="flex flex-col justify-between gap-5 overflow-x-hidden w-3/4 px-4 overflow-y-auto mt-2 py-10 h-full min-h-[75vh]">
+            <div class="flex flex-col items-center gap-4 w-full">
+                <!-- Waste Type Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col gap-2">
+                        <p class="text-lg">Waste Type</p>
+                        <select id="type" formControlName="type" [class.is-invalid]="isFieldInvalid('type')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none border-2 border-gray-800 p-2 rounded-md">
+                            <option value="" disabled>Select waste type</option>
+                            <option *ngFor="let t of types" [value]="t">{{ t }}</option>
+                        </select>
+                    </div>
+                    <div *ngIf="isFieldInvalid('type')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="collectionRequestForm.get('type')?.errors?.['required']">
+                            Waste type is required
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Estimated Weight Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col gap-2">
+                        <p class="text-lg">Estimated Weight (g)</p>
+                        <input id="estimated_weight" type="number" formControlName="estimated_weight"
+                            [class.is-invalid]="isFieldInvalid('estimated_weight')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none border-2 border-gray-800 p-2 rounded-md"
+                            placeholder="Enter estimated weight (minimum 1000g)" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('estimated_weight')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="collectionRequestForm.get('estimated_weight')?.errors?.['required']">
+                            Estimated weight is required
+                        </span>
+                        <span *ngIf="collectionRequestForm.get('estimated_weight')?.errors?.['min']">
+                            Estimated weight must be at least 1000 grams
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Collection Address Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col gap-2">
+                        <p class="text-lg">Collection Address</p>
+                        <input id="collect_address" type="text" formControlName="collect_address" [class.is-invalid]="isFieldInvalid('collect_address')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none border-2 border-gray-800 p-2 rounded-md"
+                            placeholder="Enter collection address" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('collect_address')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="collectionRequestForm.get('collect_address')?.errors?.['required']">
+                            Collection address is required
+                        </span>
+                        <span *ngIf="collectionRequestForm.get('collect_address')?.errors?.['minlength']">
+                            Collection address should be at least 5 characters
+                        </span>
+                        <span *ngIf="collectionRequestForm.get('collect_address')?.errors?.['maxlength']">
+                            Collection address should not exceed 200 characters
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Collection Date Field -->
+                <div class="flex flex-col mb-3 w-full">
+                    <div class="flex flex-col gap-2">
+                        <p class="text-lg">Collection Date</p>
+                        <input id="collect_date" type="date" formControlName="collect_date" [class.is-invalid]="isFieldInvalid('collect_date')"
+                            class="placeholder:font-light placeholder:text-xs focus:outline-none border-2 border-gray-800 p-2 rounded-md"
+                            placeholder="Select collection date" autocomplete="off">
+                    </div>
+                    <div *ngIf="isFieldInvalid('collect_date')" class="text-red-600 text-xs pl-3">
+                        <span *ngIf="collectionRequestForm.get('collect_date')?.errors?.['required']">
+                            Collection date is required
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="(editedCollectionRequest$ | async)" class="w-full flex items-center gap-4">
+                <button *ngIf="loading$ | async" type="button"
+                    class="flex cursor-not-allowed items-center justify-center shadow-sm rounded-md bg-black py-3 px-2 leading-6 font-semibold text-white transition duration-150 ease-in-out w-full"
+                    disabled="">
+                    <svg class="mr-3 -ml-1 size-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>Processing…</button>
+                <button *ngIf="!(loading$ | async)" type="submit"
+                    class="w-full cursor-pointer rounded-md shadow-sm text-white font-medium bg-black py-3 px-2 transition-all duration-200 hover:bg-gray-950 hover:shadow-md">
+                    Update
+                </button>
+                <button (click)="deleteCollectionRequest()"
+                    class="w-full cursor-pointer rounded-md shadow-sm text-white font-medium bg-red-600 py-3 px-2 transition-all duration-200 hover:bg-gray-950 hover:shadow-md">
+                    Delete
+                </button>
+            </div>
+            <div *ngIf="!(editedCollectionRequest$ | async)" class="w-full flex items-center gap-4">
+                <button *ngIf="loading$ | async" type="button"
+                    class="flex cursor-not-allowed items-center justify-center shadow-sm rounded-md bg-black py-3 px-2 leading-6 font-semibold text-white transition duration-150 ease-in-out w-full"
+                    disabled="">
+                    <svg class="mr-3 -ml-1 size-5 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>Processing…</button>
+                <button *ngIf="!(loading$ | async)" type="submit"
+                    class="w-full cursor-pointer rounded-md shadow-sm text-white font-medium bg-black py-3 px-2 transition-all duration-200 hover:bg-gray-950 hover:shadow-md">
+                    Create Collection Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

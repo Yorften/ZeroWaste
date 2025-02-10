@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap, mergeMap } from 'rxjs/operators';
+import { catchError, map, concatMap, mergeMap, delay } from 'rxjs/operators';
 import { Observable, EMPTY, of } from 'rxjs';
 import { CollectionRequestActions } from './collection-request.actions';
 import { CollectionRequestService } from '../../../core/services/collection-request/collection-request.service';
@@ -13,7 +13,8 @@ export class CollectionRequestEffects {
     this.actions$.pipe(
       ofType(CollectionRequestActions.loadCollectionRequests),
       mergeMap(action =>
-        this.collectionRequestService.getCollectionRequests(action.user.id).pipe(
+        this.collectionRequestService.getCollectionRequests(action.userId).pipe(
+          delay(2000),
           map(collectionRequests =>
             CollectionRequestActions.loadCollectionRequestsSuccess({ collectionRequests })
           ),
@@ -30,6 +31,7 @@ export class CollectionRequestEffects {
       ofType(CollectionRequestActions.addCollectionRequest),
       mergeMap(action =>
         this.collectionRequestService.createCollectionRequest(action.collectionRequest).pipe(
+          delay(2000),
           map(collectionRequest =>
             CollectionRequestActions.addCollectionRequestSuccess({ collectionRequest: collectionRequest })
           ),
@@ -46,6 +48,7 @@ export class CollectionRequestEffects {
       ofType(CollectionRequestActions.updateCollectionRequest),
       mergeMap(action =>
         this.collectionRequestService.updateCollectionRequest(action.collectionRequest).pipe(
+          delay(2000),
           map(updatedRequest =>
             CollectionRequestActions.updateCollectionRequestSuccess({
               collectionRequest: { id: updatedRequest.id, changes: updatedRequest }

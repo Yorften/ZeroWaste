@@ -19,6 +19,7 @@ export class UserProfileComponent {
   loading$: Observable<boolean> = this.store.select(selectLoadingState);
   user: User | null = null;
 
+
   constructor(private fb: FormBuilder, private store: Store) {
     this.profileForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(32)]],
@@ -44,6 +45,10 @@ export class UserProfileComponent {
         });
       }
     });
+  }
+
+  deleteAccount() {
+    this.store.dispatch(UserActions.deleteUser({ id: this.user!.id }));
   }
 
   onSubmit(): void {

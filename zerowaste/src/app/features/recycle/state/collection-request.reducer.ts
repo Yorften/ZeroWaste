@@ -8,6 +8,7 @@ export const collectionRequestsFeatureKey = 'collectionRequests';
 export interface State extends EntityState<CollectionRequest> {
   resolverLoadingState: boolean;
   requestLoadingState: boolean;
+  editedCollectionRequest: CollectionRequest | null;
   status: 'success' | string | null;
 }
 
@@ -16,6 +17,7 @@ export const adapter: EntityAdapter<CollectionRequest> = createEntityAdapter<Col
 export const initialState: State = adapter.getInitialState({
   resolverLoadingState: false,
   requestLoadingState: false,
+  editedCollectionRequest: null,
   status: null,
 });
 
@@ -94,7 +96,17 @@ export const reducer = createReducer(
     ...state,
     requestLoadingState: false,
     status: error,
-  }))
+  })),
+
+
+  on(CollectionRequestActions.editCollectionRequest, (state, { collectionRequest }) => ({
+    ...state,
+    editedCollectionRequest: collectionRequest,
+  })),
+  on(CollectionRequestActions.clearEditedCollectionRequest, (state) => ({
+    ...state,
+    editedCollectionRequest: null,
+  })),
 
 );
 
@@ -115,6 +127,10 @@ export const collectionRequestsFeature = createFeature({
       selectCollectionRequestsState,
       (state: State) => state.status
     ),
+    selectEditedCollectionRequest: createSelector(
+      selectCollectionRequestsState,
+      (state: State) => state.editedCollectionRequest
+    ),
   }),
 
 });
@@ -127,5 +143,6 @@ export const {
   selectResolverLoadingState,
   selectRequestLoadingState,
   selectStatusState,
+  selectEditedCollectionRequest,
 
 } = collectionRequestsFeature;
