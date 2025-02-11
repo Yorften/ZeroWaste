@@ -61,8 +61,8 @@ export class CollectionRequestService {
 
     const currentTotalWeight = ongoingRequests.reduce((total, req) => total + req.estimated_weight, 0);
     if (currentTotalWeight + newRequest.estimated_weight > 10000) {
-      const weightLeft = currentTotalWeight + newRequest.estimated_weight - 10000;
-      return throwError(() => new Error('Total collection weight limit exceeded (10kg). Estimated weight left is ' + weightLeft + "g."));
+      const weightLeft = 10000 - currentTotalWeight;
+      return throwError(() => new Error('Total collection weight limit exceeded (10kg). Estimated weight left for requests is ' + weightLeft + "g."));
     }
 
     // If no id is provided, generate one
@@ -80,7 +80,9 @@ export class CollectionRequestService {
     if (!isPlatformBrowser(this.platformId)) {
       return throwError(() => new Error('Not running in a browser environment'));
     }
+
     const requests = this.getRequestsFromStorage();
+
     if (userId) {
       return of(requests.filter(req => req.user_id === userId));
     }
@@ -115,8 +117,8 @@ export class CollectionRequestService {
       );
       const totalWeight = ongoingRequests.reduce((total, req) => total + req.estimated_weight, 0);
       if (totalWeight + updatedRequest.estimated_weight > 10000) {
-        const weightLeft = totalWeight + updatedRequest.estimated_weight - 10000;
-        return throwError(() => new Error('Total collection weight limit exceeded (10kg). Estimated weight left is ' + weightLeft + 'g.'));
+        const weightLeft = 10000 - totalWeight;
+        return throwError(() => new Error('Total collection weight limit exceeded (10kg). Estimated weight left for requests is ' + weightLeft + 'g.'));
       }
     }
 

@@ -1,29 +1,67 @@
-<div class="flex flex-col h-[78vh] gap-4 px-1">
-    <div class="h-[14vh] pt-[4vh] px-[4%]">
+<div class="flex flex-col h-[78vh] gap-6 px-1">
+    <div class="h-[14vh] pt-[4vh] py-[2vh] px-[4%]">
         <div class="flex items-center justify-between w-full">
             <p *ngIf="isIndividual$ | async" class="text-5xl font-medium">My Collection Requests</p>
             <p *ngIf="!(isIndividual$ | async)" class="text-5xl font-medium">Collection Requests</p>
-            <app-button-primary *ngIf="isIndividual$ | async" (click)="isOpen = !isOpen" content="Createa request" />
+            <app-button-primary *ngIf="isIndividual$ | async" (click)="isOpen = !isOpen" content="Create request" />
         </div>
     </div>
-    <div *ngIf="(collectionRequests$ | async)?.length! > 0 && (isIndividual$ | async)"
-        class="grid grid-cols-2 place-items-center lg:grid-cols-3 gap-1 md:gap-2 w-full">
-        <div *ngFor="let collectionRequest of collectionRequests$ | async"
-            class="shadow-md border border-b-0 rounded-md bg-gray-50 w-3/4 text-lg h-[300px]">
-            <div *ngIf="collectionRequest.status === ON_HOLD" (click)="editCollectioRequest(collectionRequest)"
-                class="flex flex-col gap-3 w-full h-full p-4 cursor-pointer">
-                <p class="self-end mb-2 p-1 rounded-md border-2 bg-black text-white shadow-md"> {{ RequestStatus[collectionRequest.status] }} </p>
-                <p><span class="font-medium">Address: </span>{{collectionRequest.collect_address}} </p>
-                <p><span class="font-medium">Material: </span>{{collectionRequest.type}} </p>
-                <p><span class="font-medium">Estimated Weight: </span>{{collectionRequest.estimated_weight}}g </p>
-                <p><span class="font-medium">Collect Date: </span>{{ collectionRequest.collect_date | date:'dd/MM/yyyy' }} </p>
+    <div *ngIf="(isIndividual$ | async)" class="px-[4%]">
+        <p class="text-3xl font-medium">Total points earned: <span class="text-green-600 text-xl"> {{ (user$ |async)?.points }} </span></p>
+    </div>
+    <div *ngIf="(collectionRequests$ | async)?.length! > 0 && (isIndividual$ | async)">
+        <div *ngIf="!(loading$ | async)" class="grid grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 w-full">
+            <div *ngFor="let collectionRequest of collectionRequests$ | async"
+                class="shadow-md border border-b-0 rounded-md bg-gray-50 w-4/5 text-lg h-[300px]">
+                <div *ngIf="collectionRequest.status === ON_HOLD" (click)="editCollectioRequest(collectionRequest)"
+                    class="flex flex-col gap-3 w-full h-full p-4 cursor-pointer">
+                    <p class="self-end mb-2 p-1 rounded-md border-2 bg-black text-white shadow-md"> {{ RequestStatus[collectionRequest.status] }} </p>
+                    <p><span class="font-medium">Address: </span>{{collectionRequest.collect_address}} </p>
+                    <p><span class="font-medium">Material: </span>{{collectionRequest.type}} </p>
+                    <p><span class="font-medium">Estimated Weight: </span>{{collectionRequest.estimated_weight}}g </p>
+                    <p><span class="font-medium">Collect Date: </span>{{ collectionRequest.collect_date | date:'dd/MM/yyyy' }} </p>
+                </div>
+                <div *ngIf="collectionRequest.status !== ON_HOLD" class="flex flex-col gap-3 w-full h-full p-4 cursor-not-allowed">
+                    <p class="self-end mb-2 p-1 rounded-md border-2 bg-black text-white shadow-md"> {{ RequestStatus[collectionRequest.status] }} </p>
+                    <p><span class="font-medium">Address: </span>{{collectionRequest.collect_address}} </p>
+                    <p><span class="font-medium">Material: </span>{{collectionRequest.type}} </p>
+                    <p><span class="font-medium">Estimated Weight: </span>{{collectionRequest.estimated_weight}}g </p>
+                    <p><span class="font-medium">Collect Date: </span>{{ collectionRequest.collect_date | date:'dd/MM/yyyy' }} </p>
+                </div>
             </div>
-            <div *ngIf="collectionRequest.status !== ON_HOLD" class="flex items-center gap-1 w-full h-full p-2 cursor-not-allowed">
-                <p class="self-end mb-2 p-1 rounded-md border-2 bg-black text-white shadow-md"> {{ RequestStatus[collectionRequest.status] }} </p>
-                <p><span class="font-medium">Address: </span>{{collectionRequest.collect_address}} </p>
-                <p><span class="font-medium">Material: </span>{{collectionRequest.type}} </p>
-                <p><span class="font-medium">Estimated Weight: </span>{{collectionRequest.estimated_weight}}g </p>
-                <p><span class="font-medium">Collect Date: </span>{{ collectionRequest.collect_date | date:'dd/MM/yyyy' }} </p>
+        </div>
+        <div *ngIf="(loading$ | async)" class="grid grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 w-full">
+            <div *ngFor="let i of [].constructor(4);" class="shadow-md border border-b-0 rounded-md bg-gray-50 w-4/5 text-lg h-[300px]">
+                <div class="flex flex-col gap-3 w-full h-full p-4 cursor-pointer animate-pulse">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="(collectionRequests$ | async)?.length! > 0 && !(isIndividual$ | async)">
+        <div *ngIf="!(loading$ | async)" class="grid grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 w-full">
+            <div *ngFor="let collectionRequest of collectionRequests$ | async"
+                class="shadow-md border border-b-0 rounded-md bg-gray-50 w-4/5 text-lg h-[300px]">
+                <div class="flex flex-col gap-3 w-full h-full p-4">
+                    <select [disabled]="collectionRequest.status === RequestStatus.ACCEPTED || collectionRequest.status === RequestStatus.REJECTED" #statusSelect
+                        class="self-end mb-2 p-1 rounded-md border-2 bg-black text-white shadow-md"
+                        (change)="onStatusChange(statusSelect.value, collectionRequest)">
+                        <option *ngFor="let status of statuses" [value]="status" [selected]="status === RequestStatus[collectionRequest.status]">
+                            {{ status }}
+                        </option>
+                    </select>
+                    <p><span class="font-medium">Address: </span>{{collectionRequest.collect_address}} </p>
+                    <p><span class="font-medium">Material: </span>{{collectionRequest.type}} </p>
+                    <p><span class="font-medium">Estimated Weight: </span>{{collectionRequest.estimated_weight}}g </p>
+                    <p><span class="font-medium">Collect Date: </span>{{ collectionRequest.collect_date | date:'dd/MM/yyyy' }} </p>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="(loading$ | async)" class="grid grid-cols-2 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 w-full">
+            <div *ngFor="let i of [].constructor(4);" class="shadow-md border border-b-0 rounded-md bg-gray-50 w-4/5 text-lg h-[300px]">
+                <div class="flex flex-col gap-3 w-full h-full p-4 cursor-pointer animate-pulse">
+
+                </div>
             </div>
         </div>
     </div>

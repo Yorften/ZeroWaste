@@ -45,27 +45,30 @@ export class UserEffects {
       ofType(CollectionRequestActions.updateCollectionRequestSuccess),
       switchMap(action => {
         const changes = action.collectionRequest.changes;
+
         if (changes && changes.status === RequestStatus.ACCEPTED) {
 
           const weightKg = changes.estimated_weight! / 1000;
+
           let multiplier = 0;
 
-          switch (changes.type) {
-            case MaterialType.PLASTIC:
+          switch (changes.type?.toString()) {
+            case 'PLASTIC':
               multiplier = 2;
               break;
-            case MaterialType.GLASS:
+            case 'GLASS':
               multiplier = 1;
               break;
-            case MaterialType.PAPER:
+            case 'PAPER':
               multiplier = 1;
               break;
-            case MaterialType.METAL:
+            case 'METAL':
               multiplier = 5;
               break;
             default:
               multiplier = 0;
           }
+         
           const rewardPoints = parseFloat((multiplier * weightKg).toFixed(2));
 
           return of(UserActions.rewardPoints({ points: rewardPoints, userId: changes.user_id! }));

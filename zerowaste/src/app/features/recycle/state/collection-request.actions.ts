@@ -12,6 +12,10 @@ export const CollectionRequestActions = createActionGroup({
     'Load CollectionRequests Success': props<{ collectionRequests: CollectionRequest[] }>(),
     'Load CollectionRequests Failure': props<{ status: status }>(),
 
+    'Get CollectionRequests': props<{ userId?: string }>(),
+    'Get CollectionRequests Success': props<{ collectionRequests: CollectionRequest[] }>(),
+    'Get CollectionRequests Failure': props<{ status: status }>(),
+
     'Add Collection Request': props<{ collectionRequest: CollectionRequest }>(),
     'Add Collection Request Success': props<{ collectionRequest: CollectionRequest }>(),
     'Add Collection Request Failure': props<{ error: status }>(),

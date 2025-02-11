@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap, mergeMap, delay } from 'rxjs/operators';
+import { catchError, map, concatMap, mergeMap, delay, withLatestFrom } from 'rxjs/operators';
 import { Observable, EMPTY, of } from 'rxjs';
 import { CollectionRequestActions } from './collection-request.actions';
 import { CollectionRequestService } from '../../../core/services/collection-request/collection-request.service';
 import { NotificationService } from '../../../core/services/notification/notification.service';
+import { Store } from '@ngrx/store';
+import { selectUserState } from '../../auth/state/auth.selectors';
 
 
 @Injectable()
@@ -21,6 +23,23 @@ export class CollectionRequestEffects {
           ),
           catchError(error =>
             of(CollectionRequestActions.loadCollectionRequestsFailure({ status: 'error' }))
+          )
+        )
+      )
+    )
+  );
+
+  getCollectionRequests$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CollectionRequestActions.getCollectionRequests),
+      mergeMap(action =>
+        this.collectionRequestService.getCollectionRequests(action.userId).pipe(
+          delay(1000),
+          map(collectionRequests =>
+            CollectionRequestActions.getCollectionRequestsSuccess({ collectionRequests })
+          ),
+          catchError(error =>
+            of(CollectionRequestActions.getCollectionRequestsFailure({ status: 'error' }))
           )
         )
       )
@@ -54,20 +73,24 @@ export class CollectionRequestEffects {
   updateCollectionRequest$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CollectionRequestActions.updateCollectionRequest),
-      mergeMap(action =>
+      withLatestFrom(this.store.select(selectUserState)),
+      mergeMap(([action, user]) =>
         this.collectionRequestService.updateCollectionRequest(action.collectionRequest).pipe(
           mergeMap(updatedRequest => {
             this.notificationService.emitNotification(
               'Your collection request has been updated!',
               'success'
             );
-
             const { id, ...changes } = updatedRequest;
+            const loadAction =
+              user?.role === 'COLLECTOR'
+                ? CollectionRequestActions.getCollectionRequests({ userId: undefined })
+                : CollectionRequestActions.getCollectionRequests({ userId: updatedRequest.user_id });
             return [
               CollectionRequestActions.updateCollectionRequestSuccess({
                 collectionRequest: { id: updatedRequest.id, changes }
               }),
-              CollectionRequestActions.loadCollectionRequests({ userId: updatedRequest.user_id })
+              loadAction
             ];
           }),
           catchError(error => {
@@ -78,7 +101,8 @@ export class CollectionRequestEffects {
       )
     )
   );
-  
+
+
 
   deleteCollectionRequest$ = createEffect(() =>
     this.actions$.pipe(
@@ -97,5 +121,5 @@ export class CollectionRequestEffects {
   );
 
 
-  constructor(private actions$: Actions, private collectionRequestService: CollectionRequestService, private notificationService: NotificationService) { }
+  constructor(private actions$: Actions, private collectionRequestService: CollectionRequestService, private notificationService: NotificationService, private store: Store) { }
 }

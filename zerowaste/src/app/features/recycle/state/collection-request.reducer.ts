@@ -7,6 +7,7 @@ export const collectionRequestsFeatureKey = 'collectionRequests';
 
 export interface State extends EntityState<CollectionRequest> {
   resolverLoadingState: boolean;
+  getRequestsLoadingState: boolean;
   requestLoadingState: boolean;
   editedCollectionRequest: CollectionRequest | null;
   status: 'success' | string | null;
@@ -16,6 +17,7 @@ export const adapter: EntityAdapter<CollectionRequest> = createEntityAdapter<Col
 
 export const initialState: State = adapter.getInitialState({
   resolverLoadingState: false,
+  getRequestsLoadingState: false,
   requestLoadingState: false,
   editedCollectionRequest: null,
   status: null,
@@ -38,6 +40,23 @@ export const reducer = createReducer(
   on(CollectionRequestActions.loadCollectionRequestsFailure, (state, { status }) => ({
     ...state,
     resolverLoadingState: false,
+    status,
+  })),
+
+  on(CollectionRequestActions.getCollectionRequests, (state) => ({
+    ...state,
+    getRequestsLoadingState: true,
+    status: null,
+  })),
+  on(CollectionRequestActions.getCollectionRequestsSuccess, (state, { collectionRequests }) =>
+    adapter.setAll(collectionRequests, {
+      ...state,
+      getRequestsLoadingState: false,
+    })
+  ),
+  on(CollectionRequestActions.getCollectionRequestsFailure, (state, { status }) => ({
+    ...state,
+    getRequestsLoadingState: false,
     status,
   })),
 
@@ -67,7 +86,6 @@ export const reducer = createReducer(
     status: null,
   })),
   on(CollectionRequestActions.updateCollectionRequestSuccess, (state, { collectionRequest }) => {
-    console.log('updateCollectionRequestSuccess collectionRequest:', collectionRequest);
     return {
       ...adapter.updateOne(collectionRequest, state),
       requestLoadingState: false,
@@ -124,6 +142,10 @@ export const collectionRequestsFeature = createFeature({
       selectCollectionRequestsState,
       (state: State) => state.requestLoadingState
     ),
+    selectGetRequestLoadingState: createSelector(
+      selectCollectionRequestsState,
+      (state: State) => state.getRequestsLoadingState
+    ),
     selectStatusState: createSelector(
       selectCollectionRequestsState,
       (state: State) => state.status
@@ -145,5 +167,6 @@ export const {
   selectRequestLoadingState,
   selectStatusState,
   selectEditedCollectionRequest,
+  selectGetRequestLoadingState,
 
 } = collectionRequestsFeature;
