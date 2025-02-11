@@ -4,6 +4,7 @@ import { catchError, map, concatMap, mergeMap, delay } from 'rxjs/operators';
 import { Observable, EMPTY, of } from 'rxjs';
 import { CollectionRequestActions } from './collection-request.actions';
 import { CollectionRequestService } from '../../../core/services/collection-request/collection-request.service';
+import { NotificationService } from '../../../core/services/notification/notification.service';
 
 
 @Injectable()
@@ -31,13 +32,20 @@ export class CollectionRequestEffects {
       ofType(CollectionRequestActions.addCollectionRequest),
       mergeMap(action =>
         this.collectionRequestService.createCollectionRequest(action.collectionRequest).pipe(
-          delay(2000),
-          map(collectionRequest =>
-            CollectionRequestActions.addCollectionRequestSuccess({ collectionRequest: collectionRequest })
-          ),
-          catchError(error =>
-            of(CollectionRequestActions.addCollectionRequestFailure({ error: 'error' }))
-          )
+          map(collectionRequest => {
+            this.notificationService.emitNotification(
+              'Your colection request has been registered!',
+              'success'
+            );
+            return CollectionRequestActions.addCollectionRequestSuccess({ collectionRequest: collectionRequest })
+          }),
+          catchError(error => {
+            this.notificationService.emitNotification(
+              error,
+              'error'
+            );
+            return of(CollectionRequestActions.addCollectionRequestFailure({ error: 'error' }))
+          })
         )
       )
     )
@@ -48,19 +56,29 @@ export class CollectionRequestEffects {
       ofType(CollectionRequestActions.updateCollectionRequest),
       mergeMap(action =>
         this.collectionRequestService.updateCollectionRequest(action.collectionRequest).pipe(
-          delay(2000),
-          map(updatedRequest =>
-            CollectionRequestActions.updateCollectionRequestSuccess({
-              collectionRequest: { id: updatedRequest.id, changes: updatedRequest }
-            })
-          ),
-          catchError(error =>
-            of(CollectionRequestActions.updateCollectionRequestFailure({ error: 'error' }))
-          )
+          mergeMap(updatedRequest => {
+            this.notificationService.emitNotification(
+              'Your collection request has been updated!',
+              'success'
+            );
+
+            const { id, ...changes } = updatedRequest;
+            return [
+              CollectionRequestActions.updateCollectionRequestSuccess({
+                collectionRequest: { id: updatedRequest.id, changes }
+              }),
+              CollectionRequestActions.loadCollectionRequests({ userId: updatedRequest.user_id })
+            ];
+          }),
+          catchError(error => {
+            this.notificationService.emitNotification(error, 'error');
+            return of(CollectionRequestActions.updateCollectionRequestFailure({ error: 'error' }));
+          })
         )
       )
     )
   );
+  
 
   deleteCollectionRequest$ = createEffect(() =>
     this.actions$.pipe(
@@ -79,5 +97,5 @@ export class CollectionRequestEffects {
   );
 
 
-  constructor(private actions$: Actions, private collectionRequestService: CollectionRequestService) {}
+  constructor(private actions$: Actions, private collectionRequestService: CollectionRequestService, private notificationService: NotificationService) { }
 }

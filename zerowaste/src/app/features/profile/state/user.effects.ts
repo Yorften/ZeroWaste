@@ -7,6 +7,7 @@ import { UserService } from '../../../core/services/user/user.service';
 import { User } from '../../../shared/models/user.model';
 import { CollectionRequestActions } from '../../recycle/state/collection-request.actions';
 import { MaterialType, RequestStatus } from '../../../shared/models/collection-request.model';
+import { CollectionRequestService } from '../../../core/services/collection-request/collection-request.service';
 
 
 @Injectable()
@@ -48,7 +49,7 @@ export class UserEffects {
 
           const weightKg = changes.estimated_weight! / 1000;
           let multiplier = 0;
-       
+
           switch (changes.type) {
             case MaterialType.PLASTIC:
               multiplier = 2;
@@ -112,9 +113,12 @@ export class UserEffects {
       ofType(UserActions.deleteUser),
       mergeMap(action =>
         this.userService.deleteUser(action.id).pipe(
-          map(() => UserActions.deleteUserSuccess({ id: action.id })),
+          map(() => {
+            this.collectionRequestService.deleteCollectionRequestsByUser(action.id)
+            return UserActions.deleteUserSuccess({ id: action.id })
+          }),
           catchError(error =>
-            of(UserActions.deleteUserFailure({ status: 'error' }))
+            of(UserActions.deleteUserFailure({ status: error }))
           )
         )
       )
@@ -122,5 +126,5 @@ export class UserEffects {
   );
 
 
-  constructor(private actions$: Actions, private userService: UserService) { }
+  constructor(private actions$: Actions, private userService: UserService, private collectionRequestService: CollectionRequestService) { }
 }

@@ -89,14 +89,14 @@ export class UserService {
     return of(user);
   }
 
-  // DELETE: Remove a user by email
-  deleteUser(email: string): Observable<boolean> {
+  // DELETE: Remove a user by id
+  deleteUser(id: string): Observable<boolean> {
     if (!isPlatformBrowser(this.platformId)) {
       return throwError(() => new Error('Not running in a browser environment'));
     }
 
     const users = this.getUsersFromStorage();
-    const updatedUsers = users.filter(u => u.email !== email);
+    const updatedUsers = users.filter(u => u.id !== id);
     if (updatedUsers.length === users.length) {
       return throwError(() => new Error('User not found'));
     }

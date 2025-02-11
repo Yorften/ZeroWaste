@@ -99,12 +99,35 @@ export class CollectionRequestService {
       return throwError(() => new Error('Collection request not found'));
     }
 
-    // Merge the changes into the existing collection request.
-    const updatedRequest = { ...requests[index], ...update.changes };
+    const updatedRequest: CollectionRequest = { ...requests[index], ...update.changes };
+
+    const ongoingStatuses = [
+      RequestStatus.ON_HOLD,
+      RequestStatus.OCCUPIED,
+      RequestStatus.IN_PROGRESS
+    ];
+
+    if (ongoingStatuses.includes(updatedRequest.status)) {
+      const ongoingRequests = requests.filter(req =>
+        req.user_id === updatedRequest.user_id &&
+        ongoingStatuses.includes(req.status) &&
+        req.id !== update.id
+      );
+      const totalWeight = ongoingRequests.reduce((total, req) => total + req.estimated_weight, 0);
+      if (totalWeight + updatedRequest.estimated_weight > 10000) {
+        const weightLeft = totalWeight + updatedRequest.estimated_weight - 10000;
+        return throwError(() => new Error('Total collection weight limit exceeded (10kg). Estimated weight left is ' + weightLeft + 'g.'));
+      }
+    }
+
     requests[index] = updatedRequest;
     this.saveRequestsToStorage(requests);
     return of(updatedRequest);
   }
+
+
+
+
 
 
   // Delete a collection request by id
@@ -120,4 +143,17 @@ export class CollectionRequestService {
     this.saveRequestsToStorage(updatedRequests);
     return of(true);
   }
+
+  // Delete all user's collection requests
+  deleteCollectionRequestsByUser(userId: string): Observable<boolean> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return throwError(() => new Error('Not running in a browser environment'));
+    }
+    const requests = this.getRequestsFromStorage();
+    const updatedRequests = requests.filter(req => req.user_id !== userId);
+    this.saveRequestsToStorage(updatedRequests);
+    return of(true);
+  }
+
+
 }

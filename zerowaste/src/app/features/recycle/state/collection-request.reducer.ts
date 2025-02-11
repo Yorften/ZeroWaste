@@ -66,13 +66,14 @@ export const reducer = createReducer(
     requestLoadingState: true,
     status: null,
   })),
-  on(CollectionRequestActions.updateCollectionRequestSuccess, (state, { collectionRequest }) =>
-    adapter.updateOne(collectionRequest, {
-      ...state,
+  on(CollectionRequestActions.updateCollectionRequestSuccess, (state, { collectionRequest }) => {
+    console.log('updateCollectionRequestSuccess collectionRequest:', collectionRequest);
+    return {
+      ...adapter.updateOne(collectionRequest, state),
       requestLoadingState: false,
-      status: 'success',
-    })
-  ),
+      status: null,
+    };
+  }),
   on(CollectionRequestActions.updateCollectionRequestFailure, (state, { error }) => ({
     ...state,
     requestLoadingState: false,

@@ -14,6 +14,7 @@ export class DashboardComponent {
 
   isOpen: boolean = false;
   collectionRequests$: Observable<CollectionRequest[]> = this.store.select(selectAll);
+  RequestStatus = RequestStatus;
   ON_HOLD: RequestStatus = RequestStatus.ON_HOLD;
   isIndividual$: Observable<boolean> = this.store.select(selectUserState).pipe(
     map(user => user?.role === 'INDIVIDUAL')

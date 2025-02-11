@@ -4,11 +4,26 @@ import { map, Observable, Subscription, take } from 'rxjs';
 import { CollectionRequest, MaterialType, RequestStatus } from '../../models/collection-request.model';
 import { selectEditedCollectionRequest, selectRequestLoadingState, selectStatusState } from '../../../features/recycle/state/collection-request.reducer';
 import { CollectionRequestActions } from '../../../features/recycle/state/collection-request.actions';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { status } from '../../../features/auth/state/auth.actions';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { User } from '../../models/user.model';
 import { selectUserState } from '../../../features/auth/state/auth.selectors';
 
+function futureDateValidator() {
+  return (control: AbstractControl): ValidationErrors | null => {
+
+    if (!control.value) {
+      return null;
+    }
+
+    const selectedDate = new Date(control.value);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return selectedDate < today ? { pastDate: true } : null;
+  };
+}
 
 @Component({
   selector: 'app-collection-request-form',
@@ -17,13 +32,12 @@ import { selectUserState } from '../../../features/auth/state/auth.selectors';
 export class CollectionRequestFormComponent {
 
   @Output() close = new EventEmitter<void>();
-  types: (string | MaterialType)[] = Object.values(MaterialType);
+  types: string[] = Object.values(MaterialType).filter(value => typeof value === 'string') as string[];
   collectionRequestForm: FormGroup;
 
   editedCollectionRequest$: Observable<CollectionRequest | null> = this.store.select(selectEditedCollectionRequest);
   user$: Observable<User | null> = this.store.select(selectUserState);
   loading$: Observable<boolean> = this.store.select(selectRequestLoadingState);
-  status$: Observable<status> = this.store.select(selectStatusState);
 
   private subscription: Subscription;
 
@@ -32,7 +46,7 @@ export class CollectionRequestFormComponent {
       type: ['', Validators.required],
       estimated_weight: ['', [Validators.required, Validators.min(1000)]],
       collect_address: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
-      collect_date: ['', Validators.required],
+      collect_date: ['', [Validators.required, futureDateValidator]],
     });
 
     this.subscription = this.editedCollectionRequest$.subscribe((req) => {
@@ -65,12 +79,13 @@ export class CollectionRequestFormComponent {
 
       const formValues = this.collectionRequestForm.value;
 
-      const collectionRequestDTO: Partial<CollectionRequest> = {
+      const collectionRequestDTO: CollectionRequest = {
+        id: `req-${Date.now()}-${Math.random().toString(36)}`,
         type: formValues.type,
         estimated_weight: formValues.estimated_weight,
         collect_address: formValues.collect_address,
         collect_date: new Date(formValues.collect_date),
-        status: formValues.id ? undefined : RequestStatus.ON_HOLD,
+        status: RequestStatus.ON_HOLD,
         user_id: user.id
       };
 
@@ -79,6 +94,7 @@ export class CollectionRequestFormComponent {
           collectionRequest: { id: formValues.id, changes: collectionRequestDTO }
         }));
       } else {
+        console.log(collectionRequestDTO);
         this.store.dispatch(CollectionRequestActions.addCollectionRequest({
           collectionRequest: collectionRequestDTO as CollectionRequest
         }));
@@ -88,12 +104,16 @@ export class CollectionRequestFormComponent {
   }
 
   deleteCollectionRequest() {
+
     this.editedCollectionRequest$.pipe(
-      take(1),
-      map(collectionRequest => {
-        this.store.dispatch(CollectionRequestActions.deleteCollectionRequest({ id: collectionRequest!.id }))
-      })
-    )
+      take(1)
+    ).subscribe(collectionRequest => {
+      if (collectionRequest) {
+        this.store.dispatch(CollectionRequestActions.deleteCollectionRequest({ id: collectionRequest.id }));
+      }
+    });
+
+    this.closeForm()
   }
 
 

@@ -86,5 +86,17 @@ export class AuthEffects {
   );
 
 
+  deleteUserSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.deleteUserSuccess),
+      map(() => {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.removeItem('user');
+        }
+        return AuthActions.logoutSuccess({ status: 'success' });
+      })
+    )
+  );
+
   constructor(private actions$: Actions, private authService: AuthService, private userService: UserService, private notificationService: NotificationService) { }
 }
