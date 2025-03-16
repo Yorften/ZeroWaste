@@ -1,1 +1,1 @@
-ZeroWaste
+ZeroWaste App
